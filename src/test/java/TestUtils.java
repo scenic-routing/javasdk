@@ -20,6 +20,13 @@ import me.callsen.taylor.scenicrouting.javasdk.data.GraphDb;
 
 public class TestUtils {
 
+  public static GraphDb getEmptyGraphDb() throws IOException, URISyntaxException {
+    // create temporary dir
+    Path tempDirectory = Files.createTempDirectory("scenicrouting-testdb");
+
+    return new GraphDb(tempDirectory.toFile().getAbsolutePath());
+  }
+
   public static GraphDb getLoadedGraphDb() throws IOException, URISyntaxException {
     ClassLoader classLoader = GraphDb.class.getClassLoader();
 

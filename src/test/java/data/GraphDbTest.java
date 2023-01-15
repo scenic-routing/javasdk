@@ -16,7 +16,7 @@ import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 
 import me.callsen.taylor.scenicrouting.javasdk.RoutingConstants;
-import me.callsen.taylor.scenicrouting.javasdk.TestUtils;;
+import me.callsen.taylor.scenicrouting.javasdk.TestUtils;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class GraphDbTest {
@@ -50,7 +50,7 @@ public class GraphDbTest {
       // set single property
       db.setAssociatedData(rel, "myProp", new JSONArray("[{\"my\":\"data\"}]"));
 
-      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_ASSOCIATED_DATA_PROPERTY);
+      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_PROPERTY_NAME_ASSOCIATED_DATA);
       assertEquals(1, associatedDataProps.length);
       assertEquals("myProp", associatedDataProps[0]);
 
@@ -75,7 +75,7 @@ public class GraphDbTest {
       db.setAssociatedData(rel, "myProp", new JSONArray("[{\"my\":\"data\"}]"));
       db.setAssociatedData(rel, "myProp2", new JSONArray("[{\"my2\":\"data2\"}]"));
 
-      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_ASSOCIATED_DATA_PROPERTY);
+      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_PROPERTY_NAME_ASSOCIATED_DATA);
       assertEquals(2, associatedDataProps.length);
       assertEquals("myProp", associatedDataProps[0]);
       assertEquals("myProp2", associatedDataProps[1]);
@@ -106,7 +106,7 @@ public class GraphDbTest {
       db.setAssociatedData(rel, "myProp", new JSONArray("[{\"my2\":\"data2\"}]"));
 
       // confirm property is only added to associatedData once
-      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_ASSOCIATED_DATA_PROPERTY);
+      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_PROPERTY_NAME_ASSOCIATED_DATA);
       assertEquals(1, associatedDataProps.length);
       assertEquals("myProp", associatedDataProps[0]);
 
@@ -132,7 +132,7 @@ public class GraphDbTest {
       db.setAssociatedData(rel, "myProp", new JSONObject("{\"my\":\"data\"}"));
       db.setAssociatedData(rel, "myProp2", new JSONObject("{\"my2\":\"data2\"}"));
 
-      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_ASSOCIATED_DATA_PROPERTY);
+      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_PROPERTY_NAME_ASSOCIATED_DATA);
       assertEquals(2, associatedDataProps.length);
       assertEquals("myProp", associatedDataProps[0]);
       assertEquals("myProp2", associatedDataProps[1]);
@@ -162,7 +162,7 @@ public class GraphDbTest {
       db.setAssociatedData(rel, "myProp", new JSONObject("{\"my\":\"data\"}"));
       db.setAssociatedData(rel, "myProp", new JSONObject("{\"my2\":\"data2\"}"));
 
-      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_ASSOCIATED_DATA_PROPERTY);
+      String[] associatedDataProps = (String[]) rel.getProperty(RoutingConstants.GRAPH_PROPERTY_NAME_ASSOCIATED_DATA);
       assertEquals(1, associatedDataProps.length);
       assertEquals("myProp", associatedDataProps[0]); // will already have ad_elevation added & commited from first test
 
