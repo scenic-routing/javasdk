@@ -10,6 +10,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.stream.Stream;
@@ -47,6 +55,28 @@ public class TestUtils {
     }
 
     return new GraphDb(tempDirectory.toFile().getAbsolutePath());
+  }
+
+  public static ArrayList<Map<String, Object>> executeJdbcQuery(String jdbcUrl, String username, String password, String selectSQL) throws SQLException {
+    Connection conn = DriverManager.getConnection(jdbcUrl, username, password);
+    Statement statement = conn.createStatement();
+    ResultSet rs = statement.executeQuery(selectSQL);
+
+    ResultSetMetaData md = rs.getMetaData();
+    int columns = md.getColumnCount();
+    ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    while (rs.next()) {
+      HashMap<String, Object> row = new HashMap<String, Object>(columns);
+      for(int i=1; i<=columns; ++i){
+        row.put(md.getColumnName(i),rs.getObject(i));
+      }
+      list.add(row);
+    }
+
+    statement.close();
+    rs.close();
+
+    return list;
   }
 
   // utility function to help copy graph.db dir out of jar
