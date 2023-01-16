@@ -69,6 +69,33 @@ public class GraphDb {
     return result;
   }
 
+  public long getAssociatedDataRelationshipCount() {
+
+    long count = 0;
+
+    Transaction tx = this.db.beginTx();
+    try ( Result result = tx.execute( "MATCH ()-[r]-() WHERE NOT isEmpty(r.associatedData) RETURN COUNT(DISTINCT(r)) AS total" ) ) {
+      while ( result.hasNext() ) {
+        Map<String, Object> row = result.next();
+        count = (Long) row.get("total");
+      }
+    } finally {
+      tx.close();
+    }
+
+    return count;
+  }
+
+  public Result getAssociatedDataRelationshipPage(Transaction tx, int pageNumber) {
+    return getAssociatedDataRelationshipPage(tx, pageNumber, RoutingConstants.GRAPH_RELATIONSHIP_PAGINATION_AMOUNT);
+  }
+
+  public Result getAssociatedDataRelationshipPage(Transaction tx, int pageNumber, int pageSize) {
+    long startIndex = pageNumber * pageSize;
+    Result result = tx.execute( String.format("MATCH ()-[r]-() WHERE NOT isEmpty(r.associatedData) RETURN DISTINCT(r) as way ORDER BY r.osm_id DESC SKIP %s LIMIT %s", startIndex, pageSize ) );
+    return result;
+  }
+
   public void setAssociatedData(Relationship relationship, String propertyName, JSONObject associatedData) {
     // add property to associatedData list
     addAssociatedDataProperty(relationship, propertyName);
